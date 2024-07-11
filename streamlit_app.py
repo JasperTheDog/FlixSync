@@ -104,6 +104,11 @@ num_movies = len(movie_infos_all)
 #########################
 # UI
 #########################
+st.sidebar.write("`Created by:`")
+linkedin_url = "https://www.linkedin.com/in/carson-r-musser-/"
+st.sidebar.markdown(f'<a href="{linkedin_url}" target="_blank" style="text-decoration: none; color: inherit;"><img src="https://cdn-icons-png.flaticon.com/512/174/174857.png" width="25" height="25" style="vertical-align: middle; margin-right: 10px;">`Carson Musser`</a>', unsafe_allow_html=True)
+
+
 # Create a sidebar it will have a bunch of different components to determine filter
 st.sidebar.title("🌎Country Sync Selection")
 # radio button to select the country
