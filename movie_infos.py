@@ -12,6 +12,15 @@ def read_movies_data(filename='movies_data.txt'):
             movie_infos.append(movie_info)
     return movie_infos
 
+# Create function that randomizes the order of the movies in file and saves to same file
+def randomize_movies_data(filename='movies_data.txt'):
+    movie_infos = read_movies_data(filename)
+    random.shuffle(movie_infos)
+    with open(filename, 'w', encoding='utf-8') as f:
+        for movie_info in movie_infos:
+            f.write(json.dumps(movie_info) + '\n')
+
+# Sorting functions
 def sort_numeric_movie_infos(movie_infos, property_name, ascending=True):
     sorted_movie_infos = sorted(movie_infos, key=lambda x: float(x[property_name]), reverse=not ascending)
     return sorted_movie_infos
@@ -20,15 +29,30 @@ def sort_string_movie_infos(movie_infos, property_name, ascending=True):
     sorted_movie_infos = sorted(movie_infos, key=lambda x: x[property_name], reverse=not ascending)
     return sorted_movie_infos
 
-def filter_movie_infos(movie_infos, filter_func):
-    filtered_movie_infos = filter(filter_func, movie_infos)
+def randomize_movie_infos(movie_infos):
+    random.shuffle(movie_infos)
+    return movie_infos
+
+# Filtering functions
+def filter_movie_infos(movie_infos, filter_func, *args):
+    filtered_movie_infos = filter(lambda x: filter_func(x, *args), movie_infos)
     return list(filtered_movie_infos)
 
 def poster_filter_func(movie_info):
     poster = movie_info.get('poster')
     return poster and poster != "0" and poster != "N/A" and poster != ""
 
-def randomize_movie_infos(movie_infos):
-    random.shuffle(movie_infos)
-    return movie_infos
+def rating_filter_func(movie_info, min_rating, max_rating, include_unrated=False):
+    rating = float(movie_info.get('rating', 0.0))
+    if include_unrated and rating == 0.0:
+        return True
+    return min_rating <= rating <= max_rating
+
+def year_filter_func(movie_info, min_year, max_year):
+    year = int(movie_info.get('year'))
+    return min_year <= year <= max_year
+
+def title_filter_func(movie_info, title):
+    return title.lower() in movie_info.get('title').lower()
+
 
