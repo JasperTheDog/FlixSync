@@ -2,6 +2,8 @@ import requests
 import json
 import os
 
+# This isn't built directly into the Streamlit app, because the api isn't free past 100 requests a day
+
 RAPIDAPI_KEY = os.environ.get('RAPIDAPI_KEY')
 
 def replace_html_entities(filename):
@@ -25,8 +27,6 @@ def fetch_movies_in_countries_jp_us(filename, offset=0):
         "x-rapidapi-key": RAPIDAPI_KEY,
         "x-rapidapi-host": "unogs-unogs-v1.p.rapidapi.com"
     }
-
-    print(RAPIDAPI_KEY)
 
     try:
         response = requests.get(url, headers=headers, params=querystring)

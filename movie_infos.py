@@ -43,13 +43,20 @@ def poster_filter_func(movie_info):
     return poster and poster != "0" and poster != "N/A" and poster != ""
 
 def rating_filter_func(movie_info, min_rating, max_rating, include_unrated=False):
-    rating = float(movie_info.get('rating', 0.0))
+    try:
+        rating = float(movie_info.get('rating', 0.0))
+    except (ValueError, TypeError):
+        rating = 0.0
+    
     if include_unrated and rating == 0.0:
         return True
     return min_rating <= rating <= max_rating
 
 def year_filter_func(movie_info, min_year, max_year):
-    year = int(movie_info.get('year'))
+    try:
+        year = int(movie_info.get('year'))
+    except (ValueError, TypeError):
+        year = 0
     return min_year <= year <= max_year
 
 def title_filter_func(movie_info, title):

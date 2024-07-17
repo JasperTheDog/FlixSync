@@ -42,6 +42,7 @@ def get_green_to_red(percent):
 # Function to display a movie in the grid
 def display_movie(movie_info):
     placeholder_image = "https://via.placeholder.com/150"
+    placeholder_gif = "https://media.giphy.com/media/6Ud8LebVPM8uwIC9e1/giphy.gif?cid=790b76119hbx43vrxq3uhd8mjz7ouww8f43kh1xjn0j9bz7u&ep=v1_gifs_search&rid=giphy.gif&ct=g"
     
     # Check if the poster URL is valid
     poster_url = movie_info.get('poster', placeholder_image)
@@ -52,11 +53,14 @@ def display_movie(movie_info):
         image = Image.open(BytesIO(response.content))
         st.image(image, use_column_width=True)
     except Exception:
-        st.image(placeholder_image, use_column_width=True)
+        st.markdown(f"![Alt Text]({placeholder_gif})")
 
-    st.markdown(f"**{movie_info['title']}**")
+    st.markdown(f"**{movie_info['title']}**", help=movie_info['synopsis'])
 
-    rating = float(movie_info['rating'])
+    try: 
+        rating = float(movie_info['rating'])
+    except ValueError:
+        rating = 0.0
 
     background_color = get_green_to_red(rating)
 
@@ -70,6 +74,12 @@ def display_movie(movie_info):
     st.markdown(f"Year: {movie_info['year']}")
 
 def display_screen(movie_infos, num_movies_to_display):
+
+    # If None found
+    if num_movies_to_display == 0:
+        st.write("No movies found with the given filters")
+        st.markdown("![Alt Text](https://i.giphy.com/media/v1.Y2lkPTc5MGI3NjExYnpmYnBsOHg5emp4b3lzaDMyYXZoZTFvc2ZoY3ptc25jd3J6OXExbiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/o1wSLHms9t20ihdcEk/giphy.gif)")
+        return
 
     # Create a grid layout to display the movies
     num_columns = 5
@@ -111,8 +121,14 @@ st.sidebar.markdown(f'<a href="{linkedin_url}" target="_blank" style="text-decor
 
 # Create a sidebar it will have a bunch of different components to determine filter
 st.sidebar.title("🌎Country Sync Selection")
-# radio button to select the country
-country = st.sidebar.radio("Select Country", ["United States & Japan", "United States & India"])
+
+country1 = st.sidebar.radio("Select Country 1", ["United States", "Japan", "India"])
+if country1 == "United States":
+    country2 = st.sidebar.radio("Select Country 2", ["Japan", "India"])
+elif country1 == "Japan":
+    country2 = st.sidebar.radio("Select Country 2", ["United States", "India"])
+elif country1 == "India":
+    country2 = st.sidebar.radio("Select Country 2", ["United States", "Japan"])
 
 st.sidebar.divider()
 st.sidebar.title("🎛️Filters")
